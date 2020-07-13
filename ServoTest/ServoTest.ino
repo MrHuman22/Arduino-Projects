@@ -5,6 +5,7 @@ const int potPin = A1;
 const int restPoint = 60;
 const int endPoint = 150;
 const int startPoint = 0;
+const int minInterval = 300;
 Servo myServo;
 
 
@@ -25,13 +26,18 @@ void setup() {
 
 void loop() {
   int potVal = analogRead(potPin);
-  int interval = map(potVal,0,1023,10,2000);
+  int interval = map(potVal,10,1023,minInterval,3000);
   Serial.print("potVal: ");
   Serial.print(potVal);
   Serial.print(" interval: ");
   Serial.println(interval);
+  if(potVal < 10){
+    myServo.write(restPoint);
+    }
+  else {
   myServo.write(endPoint);
-  delay(interval);
+  delay(minInterval);
   myServo.write(restPoint);
   delay(interval);
+  }
 }
