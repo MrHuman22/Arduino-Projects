@@ -32,12 +32,12 @@ void loop() {
   Serial.print(" interval: ");
   Serial.println(interval);
   if(potVal < 10){
-    myServo.write(restPoint);
+    myServo.write(endPoint);
     }
   else {
-  myServo.write(endPoint);
-  delay(minInterval);
   myServo.write(restPoint);
+  delay(minInterval);
+  myServo.write(endPoint);
   delay(interval);
   }
 }
