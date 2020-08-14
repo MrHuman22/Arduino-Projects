@@ -50,13 +50,19 @@ int xServoDelay = 1000;
 int yServoMovement = 45;
 
 //control flow variables
-boolean registerX = false;
-boolean registerY = false;
+const int debounceTime = 200;
+
+//button reading variables
+boolean registeredButtonPress = false;
+int buttonValue;
 
 //state variables
 int servoState = 0;
-boolean buttonPressed = false;
-int servoCount = 1;
+int servoCount = 2;
+boolean registerX = false;
+boolean registerY = false;
+
+
 
 Servo myServo;
 
@@ -89,25 +95,49 @@ void loop() {
   delay(10);
   jY = analogRead(joystickY);
   delay(10);
-
   handleX();
   handleY();
 
-  //debugging modes
-//  displayJoystickValues();
-  displayMovementAndTimingValues();
+  // Reading the button
+  debounceButton();
+
+
+
 
   delay(1000);
   registerX = false;
   registerY = false;
+  registeredButtonPress = false;
+
+  //  debugging modes
+  //  displayJoystickValues();
+  displayMovementAndTimingValues();
+  displayServoState();
 }
 
+void displayServoState()
+{
+  Serial.print("Current Controlling Servo ");
+  Serial.println(servoState);
+}
 
 
 void debounceButton()
 {
-
+  // should increment the servoState each time the button is pressed on the joystick
+  buttonValue = digitalRead(buttonPin);
+  if (!registeredButtonPress && buttonValue == HIGH) {
+    registeredButtonPress = true;
+    servoState ++;
+    // cycle servoState
+    if (servoState >= servoCount)
+    {
+      servoState = 0;
+    }
+  }
 }
+
+
 
 void handleX()
 {
@@ -181,7 +211,7 @@ void displayMovementAndTimingValues()
   Serial.print(xServoDelay);
   Serial.print(", Movement: ");
   Serial.println(yServoMovement);
-  }
+}
 
 void displayJoystickValues()
 {
