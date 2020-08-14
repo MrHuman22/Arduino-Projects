@@ -16,6 +16,7 @@
   Test 0:
   - 0A: Read from the joystick
   - 0B: Map joystick values
+  - 0C: Adjust values based on max joystick positions
 
   Test 1:
   - Adjust range of motion
@@ -42,12 +43,15 @@ const int joystickX = A1;
 const int joystickY = A0;
 const int ledPin = 13;
 
-//string formatting
-char data[100];
-
 //values
 int jX;
 int jY;
+int xServoDelay = 1000;
+int yServoMovement = 45;
+
+//control flow variables
+boolean registerX = false;
+boolean registerY = false;
 
 //state variables
 int servoState = 0;
@@ -82,15 +86,109 @@ void loop() {
 
   // Reading the joystick commands
   jX = analogRead(joystickX);
+  delay(10);
   jY = analogRead(joystickY);
-  sprintf(data, "jX: %d, jY: %d", jX, jY);
-  Serial.println(data);
+  delay(10);
+
+  handleX();
+  handleY();
+
+  //debugging modes
+//  displayJoystickValues();
+  displayMovementAndTimingValues();
+
   delay(1000);
+  registerX = false;
+  registerY = false;
 }
+
+
 
 void debounceButton()
 {
 
+}
+
+void handleX()
+{
+
+  if (!registerX)
+  {
+    registerX = true;
+    switch (jX)
+    {
+      case 0:
+        xServoDelay -= 200;
+        flashRegisterLED(0);
+        break;
+      case 1023:
+        xServoDelay += 200;
+        flashRegisterLED(0);
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+void handleY()
+{
+  if (!registerY)
+  {
+    registerY = true;
+    switch (jY)
+    {
+      case 0:
+        yServoMovement += 5;
+        flashRegisterLED(1);
+        break;
+      case 1023:
+        yServoMovement -= 5;
+        flashRegisterLED(1);
+        break;
+      default:
+        break;
+    }
+  }
+
+}
+
+void flashRegisterLED(int axis)
+{
+  switch (axis) {
+    // single flash to denote a registered signal in X
+    case 0:
+      digitalWrite(ledPin, HIGH);
+      delay(250);
+      digitalWrite(ledPin, LOW);
+      break;
+    // double flash to denote a registered signal in Y
+    case 1:
+      digitalWrite(ledPin, HIGH);
+      delay(100);
+      digitalWrite(ledPin, LOW);
+      delay(50);
+      digitalWrite(ledPin, HIGH);
+      delay(100);
+      digitalWrite(ledPin, LOW);
+  }
+
+}
+
+void displayMovementAndTimingValues()
+{
+  Serial.print("Delay: ");
+  Serial.print(xServoDelay);
+  Serial.print(", Movement: ");
+  Serial.println(yServoMovement);
+  }
+
+void displayJoystickValues()
+{
+  Serial.print("jX: ");
+  Serial.print(jX);
+  Serial.print(", jY: ");
+  Serial.println(jY);
 }
 
 void switchState() {
