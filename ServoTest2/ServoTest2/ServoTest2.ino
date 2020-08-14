@@ -7,9 +7,9 @@
 
   What are we adjusting?
   - Range of motion
-  - Gap between instructions
+  - Temporal Gap between instructions
 
-  How do we do this with one pot per servo?
+  Use Joystick 
   - Switch: one direction controls range of motion, the other the timing
 
   Test 1:
@@ -31,9 +31,10 @@
 #include <Servo.h>
 
 //pin variables
-const int pot = A0;
 const int servoPin = 3;
-const int ledPin = 13;
+const int buttonPin = 2;
+const int joystickX = A0;
+const int joystickY = A1;
 
 Servo myServo;
 
@@ -42,6 +43,7 @@ void setup() {
   Serial.begin(9600);
 
   myServo.attach(servoPin);
+  pinMode(buttonPin, INPUT);
 
   // testing the servo;
   myServo.write(0);
