@@ -10,7 +10,12 @@
   - Temporal Gap between instructions
 
   Use Joystick 
-  - Switch: one direction controls range of motion, the other the timing
+  - X: controls range of motion, the other the timing
+  - Y: controls timing (Y>0 increases time between pulses, Y<0 decreases time between instructions)
+
+  Test 0:
+  - 0A: Read from the joystick
+  - 0B: Map joystick values
 
   Test 1:
   - Adjust range of motion
@@ -35,6 +40,12 @@ const int servoPin = 3;
 const int buttonPin = 2;
 const int joystickX = A0;
 const int joystickY = A1;
+const int ledPin = 13;
+
+//state
+int servoState = 0;
+boolean
+int servoCount = 1;
 
 Servo myServo;
 
@@ -44,6 +55,7 @@ void setup() {
 
   myServo.attach(servoPin);
   pinMode(buttonPin, INPUT);
+  pinMode(ledPin, OUTPUT);
 
   // testing the servo;
   myServo.write(0);
@@ -56,5 +68,15 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  
+  // Reading the joystick commands
 }
+
+void debounceButton()
+{
+  
+  }
+
+void switchState(){
+  
+  }
