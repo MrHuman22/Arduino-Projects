@@ -9,7 +9,7 @@
   - Range of motion
   - Temporal Gap between instructions
 
-  Use Joystick 
+  Use Joystick
   - X: controls range of motion, the other the timing
   - Y: controls timing (Y>0 increases time between pulses, Y<0 decreases time between instructions)
 
@@ -38,45 +38,61 @@
 //pin variables
 const int servoPin = 3;
 const int buttonPin = 2;
-const int joystickX = A0;
-const int joystickY = A1;
+const int joystickX = A1;
+const int joystickY = A0;
 const int ledPin = 13;
 
-//state
+//string formatting
+char data[100];
+
+//values
+int jX;
+int jY;
+
+//state variables
 int servoState = 0;
-boolean
+boolean buttonPressed = false;
 int servoCount = 1;
 
 Servo myServo;
 
 void setup() {
-  // put your setup code here, to run once:
+  //Establish serial connection
   Serial.begin(9600);
+  while (!Serial)
+  {
+    delay(10);
+  }
 
-  myServo.attach(servoPin);
+  //  myServo.attach(servoPin);
   pinMode(buttonPin, INPUT);
   pinMode(ledPin, OUTPUT);
 
   // testing the servo;
-  myServo.write(0);
-  delay(1000);
-  myServo.write(180);
-  delay(1000);
-  myServo.write(90);
-  delay(1000);
+  //  myServo.write(0);
+  //  delay(1000);
+  //  myServo.write(180);
+  //  delay(1000);
+  //  myServo.write(90);
+  //  delay(1000);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
+
   // Reading the joystick commands
+  jX = analogRead(joystickX);
+  jY = analogRead(joystickY);
+  sprintf(data, "jX: %d, jY: %d", jX, jY);
+  Serial.println(data);
+  delay(1000);
 }
 
 void debounceButton()
 {
-  
-  }
 
-void switchState(){
-  
-  }
+}
+
+void switchState() {
+
+}
