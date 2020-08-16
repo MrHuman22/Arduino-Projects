@@ -75,7 +75,8 @@ void setup() {
   }
 
   //  myServo.attach(servoPin);
-  pinMode(buttonPin, INPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+  
   pinMode(ledPin, OUTPUT);
 
   // testing the servo;
