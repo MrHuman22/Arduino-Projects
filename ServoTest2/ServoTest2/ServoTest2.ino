@@ -58,7 +58,8 @@ int buttonValue;
 
 //state variables
 int servoState = 0;
-int servoCount = 2;
+int servoCount = 4;
+int prevServoState = 0;
 boolean registerX = false;
 boolean registerY = false;
 
@@ -76,8 +77,9 @@ void setup() {
 
   //  myServo.attach(servoPin);
   pinMode(buttonPin, INPUT_PULLUP);
-  
   pinMode(ledPin, OUTPUT);
+
+  displayServoState();
 
   // testing the servo;
   //  myServo.write(0);
@@ -102,18 +104,21 @@ void loop() {
   // Reading the button
   debounceButton();
 
-
-
-
-  delay(1000);
+  //reset flags
+  delay(200);
   registerX = false;
   registerY = false;
   registeredButtonPress = false;
 
   //  debugging modes
   //  displayJoystickValues();
-  displayMovementAndTimingValues();
-  displayServoState();
+  //  displayMovementAndTimingValues();
+  if (servoState != prevServoState)
+  {
+    displayServoState();
+    prevServoState = servoState;
+  }
+
 }
 
 void displayServoState()
@@ -127,7 +132,7 @@ void debounceButton()
 {
   // should increment the servoState each time the button is pressed on the joystick
   buttonValue = digitalRead(buttonPin);
-  if (!registeredButtonPress && buttonValue == HIGH) {
+  if (!registeredButtonPress && buttonValue == LOW) {
     registeredButtonPress = true;
     servoState ++;
     // cycle servoState
