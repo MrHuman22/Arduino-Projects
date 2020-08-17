@@ -49,6 +49,11 @@ int jY;
 int xServoDelay = 1000;
 int yServoMovement = 45;
 
+//servo control
+const int servoMin = 0;
+const int servoMid = 90;
+const int servoMax = 180;
+
 //control flow variables
 const int debounceTime = 200;
 
@@ -75,19 +80,22 @@ void setup() {
     delay(10);
   }
 
-  //  myServo.attach(servoPin);
+  
   pinMode(buttonPin, INPUT_PULLUP);
   pinMode(ledPin, OUTPUT);
 
   displayServoState();
 
-  // testing the servo;
-  //  myServo.write(0);
-  //  delay(1000);
-  //  myServo.write(180);
-  //  delay(1000);
-  //  myServo.write(90);
-  //  delay(1000);
+   
+//   testing the servo;
+    myServo.attach(servoPin);
+    myServo.write(0);
+    delay(1000);
+    myServo.write(90);
+    delay(1000);
+    myServo.write(180);
+    delay(1000);
+    myServo.write(servoMid - yServoMovement);
 }
 
 void loop() {
@@ -110,9 +118,15 @@ void loop() {
   registerY = false;
   registeredButtonPress = false;
 
+  //moving by servoMovement with a delay of servoDelay
+  myServo.write(servoMid+yServoMovement);
+  delay(300);
+  myServo.write(servoMid-yServoMovement);
+  delay(xServoDelay);
+  
   //  debugging modes
-  //  displayJoystickValues();
-  //  displayMovementAndTimingValues();
+    displayJoystickValues();
+    displayMovementAndTimingValues();
   if (servoState != prevServoState)
   {
     displayServoState();
@@ -154,11 +168,11 @@ void handleX()
     switch (jX)
     {
       case 0:
-        xServoDelay -= 200;
+        xServoDelay -= 100;
         flashRegisterLED(0);
         break;
       case 1023:
-        xServoDelay += 200;
+        xServoDelay += 100;
         flashRegisterLED(0);
         break;
       default:
